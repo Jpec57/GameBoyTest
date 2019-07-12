@@ -12,14 +12,8 @@ SCRIPT=reload.sh
 all: $(NAME)
 
 $(NAME):
-    $(LCC) -o main.gb $(SDIR)/$(SRC)
-
-#$(NAME):
-#	$(LCC) -o main.gb $(SDIR)/$(SRC) $(RDIR)/$(TILE_DIR)/$(TILES)
-
-#launch:
-#    sh $(SCRIPT)
-
+	$(LCC) -o main.gb $(SDIR)/$(SRC)
+	sh reload.sh
 clean: 
 	rm -rf $(NAME)
 
