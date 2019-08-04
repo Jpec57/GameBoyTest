@@ -1,0 +1,11 @@
+//
+// Created by Jean-Paul BELLA on 2019-07-12.
+//
+
+#ifndef GAMEBOYTEST_TILEMAP_H
+#define GAMEBOYTEST_TILEMAP_H
+
+#define TILEMAP_HEIGHT 32
+#define TILEMAP_WIDTH 32
+
+#endif //GAMEBOYTEST_TILEMAP_H

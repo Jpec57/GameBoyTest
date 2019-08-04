@@ -15,6 +15,10 @@ Display the location of the command location
 
 The Gameboy's memory cannot keep more than 255 different tiles for background and 128 sprite tiles
 
+###Background size
+
+The background is made of 32 * 32 tiles.
+
 ###Screen size
 
 The size of the screen is 160 x 144 pixels

@@ -7,8 +7,10 @@
 
 #include "../includes/player.h"
 #include "../includes/tileset.h"
+#include "../includes/tilemap.h"
 #include "../includes/window_tilemap.h"
 #include "../includes/window_tileset.h"
+
 
 #include "../res/tiles/helloWorld.c"
 #include "../res/tiles/alpha.c"
@@ -16,6 +18,7 @@
 
 #include "../res/sprites/player.c"
 #include "../src/sprites/sprites_operations.c"
+#include "../src/utils/text.c"
 #include "../res/tiles/tileset.c"
 #include "../res/map/blankScreen.c"
 #include "../res/map/tilemap.c"
@@ -26,6 +29,9 @@
 
 #define SCREEN_TILE_HEIGHT 20
 #define SCREEN_TILE_WIDTH 18
+
+#define BACKGROUND_WIDTH 32
+#define BACKGROUND_HEIGHT 32
 
 // Données de l'animation des sprites du joueur
 UINT8 PLAYER_SPRITE_ANIM_L[] = {
@@ -51,7 +57,13 @@ UINT8 PLAYER_SPRITE_ANIM_R[] = {
 #define PLAYER_DIRECTION_RIGHT 12
 #define PLAYER_DIRECTION_LEFT  18
 
+#define WALKABLE_GROUND_SIZE 1
+int WALKABLE_GROUND[WALKABLE_GROUND_SIZE] = {47};
+
 void flip_sprite_horiz(UINT8 sprite_id);
 void unflip_sprite_horiz(UINT8 sprite_id);
 UINT8 update_sprite_animation(UINT8 sprite_id, UINT8 *anim, UINT8 direction, UINT8 frame);
+
+int ft_strlen(char *str);
+void convert_text(char *text);
 #endif //FIRST_MAIN_H
