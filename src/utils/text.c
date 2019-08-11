@@ -1,7 +1,7 @@
 //
 // Created by Jean-Paul BELLA on 2019-07-21.
 //
-
+#include <stdio.h>
 int ft_strlen(char *str){
     int size;
 
@@ -19,7 +19,7 @@ void convert_text(char *text){
     i = 0;
     while (i < size){
 //        if (65 < text[i] && text[i] < 90){
-            text[i] = text[i] - 48;
+        text[i] = text[i] - 48;
 //        }
         i++;
     }
@@ -28,11 +28,7 @@ void convert_text(char *text){
 //int main(void){
 //    char text[] = "THISISATEST\0";
 //    int size = ft_strlen(text);
-//    convert_text(text);
 //
-//    for (int i = 0; i < size; i++){
-//        printf("|CHAR %d| ", text[i]);
-//    }
-//
+//    change_indic();
 //    return (1);
 //}

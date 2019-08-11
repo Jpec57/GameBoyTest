@@ -81,6 +81,25 @@ void    *ft_memcpy(void *dest, const void *src, size_t n)
 //    return res;
 //}
 
+void resetTileMap(){
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    while (j < WINDOW_TILEMAP_HEIGHT){
+        i = 0;
+        while (i < WINDOW_TILEMAP_WIDTH){
+            WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = 47;
+            i++;
+        }
+        j++;
+    }
+    set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
+    move_win(7, 128);
+    wait_vbl_done();
+}
+
 int write_on_screen(char *text){
     int cursor;
     int size;
@@ -90,31 +109,36 @@ int write_on_screen(char *text){
     convert_text(text);
     size = ft_strlen(text);
 
-    i = 0;
-    j = 0;
     cursor = 0;
+    waitpadup();
     while (cursor < size){
-        if (cursor != 0)
-            waitpad(J_START);
+
+        j = 0;
         while (j < WINDOW_TILEMAP_HEIGHT){
             i = 0;
             while (i < WINDOW_TILEMAP_WIDTH){
-                WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = text[cursor];
+                if (cursor < size){
+                    WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = text[cursor];
+                } else {
+                    WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = 47;
+                }
                 i++;
                 cursor++;
             }
             j++;
          }
-         j = 0;
         set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
         move_win(7, 128);
         wait_vbl_done();
+        waitpad(J_START);
+        waitpadup();
     }
-
+    resetTileMap();
+    return (1);
 }
 
 void change_indic(){
-    char text[] = "THISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATEST\0";
+    char text[] = "THISISATESTTHISISATEST THISISATESTTHISISAJPEC\0";
 //    WINDOW_TILEMAP[4] = 55;
 //    WINDOW_TILEMAP[5] = 56;
 //    WINDOW_TILEMAP[24] = 67;
