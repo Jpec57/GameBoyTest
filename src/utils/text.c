@@ -2,6 +2,7 @@
 // Created by Jean-Paul BELLA on 2019-07-21.
 //
 #include <stdio.h>
+
 int ft_strlen(char *str){
     int size;
 

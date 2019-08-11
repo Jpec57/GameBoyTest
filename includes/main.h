@@ -65,5 +65,6 @@ void unflip_sprite_horiz(UINT8 sprite_id);
 UINT8 update_sprite_animation(UINT8 sprite_id, UINT8 *anim, UINT8 direction, UINT8 frame);
 
 int ft_strlen(char *str);
+char *ft_itoa(int num);
 void convert_text(char *text);
 #endif //FIRST_MAIN_H

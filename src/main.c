@@ -46,41 +46,6 @@ void    *ft_memcpy(void *dest, const void *src, size_t n)
     return (dest);
 }
 
-//int get_number_size(int num){
-//    int size;
-//    int i;
-//
-//    i = 0;
-//    size = 0;
-//    if (num < 0){
-//        size++;
-//    }
-//    while (num > 9){
-//        size++;
-//        num = num / 10;
-//    }
-//    return size;
-//}
-//
-//UINT8   show_number(int num){
-//    int size = get_number_size(num);
-//    UINT8 res[size];
-//
-//    if (num < 0){
-//        res[0] = 10;
-//        res[1] = num % 10;
-//    } else {
-//        res[0] = num % 10;
-//    }
-//
-//    while (num > 9){
-//        size = size - 1;
-//        res[size - 1];
-//        num = num / 10;
-//    }
-//    return res;
-//}
-
 void resetTileMap(){
     int i;
     int j;
@@ -110,6 +75,7 @@ int write_on_screen(char *text){
     size = ft_strlen(text);
 
     cursor = 0;
+    SHOW_WIN;
     waitpadup();
     while (cursor < size){
 
@@ -117,11 +83,7 @@ int write_on_screen(char *text){
         while (j < WINDOW_TILEMAP_HEIGHT){
             i = 0;
             while (i < WINDOW_TILEMAP_WIDTH){
-                if (cursor < size){
-                    WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = text[cursor];
-                } else {
-                    WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = 47;
-                }
+                WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = (cursor < size) ? text[cursor] : 47;
                 i++;
                 cursor++;
             }
@@ -133,12 +95,13 @@ int write_on_screen(char *text){
         waitpad(J_START);
         waitpadup();
     }
+    HIDE_WIN;
     resetTileMap();
     return (1);
 }
 
 void change_indic(){
-    char text[] = "THISISATESTTHISISATEST THISISATESTTHISISAJPEC\0";
+    char text[] = "THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A JPEC 57\0";
 //    WINDOW_TILEMAP[4] = 55;
 //    WINDOW_TILEMAP[5] = 56;
 //    WINDOW_TILEMAP[24] = 67;
@@ -153,14 +116,13 @@ void change_indic(){
     set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
     move_win(7, 128);
 }
+
 void check_if_is_colliding(UINT8 previous_coord[2]){
     if (check_if_ground_is_walkable()){
         if (player_direction == PLAYER_DIRECTION_DOWN) {
-            //TODO
-//            if (80 < player[1] && screen_offset[1] < TILEMAP_HEIGHT * 8 - (72 * 2)){
-            if (screen_offset[1] < TILEMAP_HEIGHT * 8 - (72 * 2)){
+            if (80 < player[1] && screen_offset[1] < (TILEMAP_HEIGHT - WINDOW_TILEMAP_HEIGHT) * 8 - (72 * 2)){
                 scroll_bkg(0, 1);
-                screen_offset[1] -= 1;
+                screen_offset[1] += 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 0, 1);
                 scroll_sprite(PLAYER_SPRITE_R_ID, 0, 1);
@@ -169,7 +131,7 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
         if (player_direction == PLAYER_DIRECTION_UP) {
             if (0 < player[1] && 0 < screen_offset[1]){
                 scroll_bkg(0, -1);
-                screen_offset[1] += 1;
+                screen_offset[1] -= 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 0, -1);
                 scroll_sprite(PLAYER_SPRITE_R_ID, 0, -1);
@@ -263,7 +225,7 @@ void move_user(){
 }
 
 void update_switches() {
-    SHOW_WIN;
+//    SHOW_WIN;
     SHOW_SPRITES;
     SHOW_BKG;
 }
@@ -320,6 +282,7 @@ void init(){
     set_bkg_tiles(0, 0, TILEMAP_HEIGHT, TILEMAP_WIDTH, TILEMAP);
 
     //window
+    resetTileMap();
     set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
     move_win(7, 128);
 
@@ -332,7 +295,6 @@ void main() {
     init();
     update_switches();
     wait_vbl_done();
-//    waitpad(J_START);
     while (1) {
         move_user();
     }
