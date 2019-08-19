@@ -1,6 +1,3 @@
-#include <gb/gb.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "../includes/main.h"
 
 UINT8 player[2];
@@ -9,24 +6,22 @@ UINT8 player_animation_frame;
 UINT8 is_player_walking;
 UINT8 screen_offset[2];
 
-int check_if_ground_is_walkable(){
+int check_if_ground_is_walkable(int pos_x, int pos_y, int sprite_size){
     int i;
     int pos1;
     int pos2;
-    int threshold;
 
     i = 0;
-    threshold = 2;
-    pos1 = TILEMAP[(player[1] / 8) * TILEMAP_HEIGHT + (player[0] / 8)];
-    pos2 = TILEMAP[((player[1] - 1) / 8) * TILEMAP_HEIGHT + ((player[0] - 1) / 8)];
+    pos1 = TILEMAP[(pos_y / 8) * TILEMAP_HEIGHT + (pos_x / 8)];
+    pos2 = TILEMAP[((pos_y - 1) / 8) * TILEMAP_HEIGHT + ((pos_x - 1) / 8)];
     while (i < WALKABLE_GROUND_SIZE){
         if (WALKABLE_GROUND[i] == pos1){
-            threshold -= 1;
+            sprite_size -= 1;
         }
         if (WALKABLE_GROUND[i] == pos2){
-            threshold -= 1;
+            sprite_size -= 1;
         }
-        if (!threshold){
+        if (!sprite_size){
             return (1);
         }
         i++;
@@ -34,94 +29,19 @@ int check_if_ground_is_walkable(){
     return (0);
 }
 
-void    *ft_memcpy(void *dest, const void *src, size_t n)
-{
-    unsigned char			*dst;
-    const unsigned char		*s;
-
-    dst = dest;
-    s = src;
-    while (n--)
-        *dst++ = *s++;
-    return (dest);
-}
-
-void resetTileMap(){
-    int i;
-    int j;
-
-    i = 0;
-    j = 0;
-    while (j < WINDOW_TILEMAP_HEIGHT){
-        i = 0;
-        while (i < WINDOW_TILEMAP_WIDTH){
-            WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = 47;
-            i++;
-        }
-        j++;
-    }
-    set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
-    move_win(7, 128);
-    wait_vbl_done();
-}
-
-int write_on_screen(char *text){
-    int cursor;
-    int size;
-    int i;
-    int j;
-
-    convert_text(text);
-    size = ft_strlen(text);
-
-    cursor = 0;
-    SHOW_WIN;
-    waitpadup();
-    while (cursor < size){
-
-        j = 0;
-        while (j < WINDOW_TILEMAP_HEIGHT){
-            i = 0;
-            while (i < WINDOW_TILEMAP_WIDTH){
-                WINDOW_TILEMAP[i + j * WINDOW_TILEMAP_WIDTH] = (cursor < size) ? text[cursor] : 47;
-                i++;
-                cursor++;
-            }
-            j++;
-         }
-        set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
-        move_win(7, 128);
-        wait_vbl_done();
-        waitpad(J_START);
-        waitpadup();
-    }
-    HIDE_WIN;
-    resetTileMap();
-    return (1);
-}
-
 void change_indic(){
     char text[] = "THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A JPEC 57\0";
-//    WINDOW_TILEMAP[4] = 55;
-//    WINDOW_TILEMAP[5] = 56;
-//    WINDOW_TILEMAP[24] = 67;
-//    WINDOW_TILEMAP[25] = 68;
 
-//    WINDOW_TILEMAP[0] = 36;
-//    WINDOW_TILEMAP[1] = 24;
-//    WINDOW_TILEMAP[2] = 25;
-//    WINDOW_TILEMAP[3] = 35;
-
-    write_on_screen(text);
+//    write_on_screen(text);
     set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
     move_win(7, 128);
 }
 
 void check_if_is_colliding(UINT8 previous_coord[2]){
-    if (check_if_ground_is_walkable()){
+    if (check_if_ground_is_walkable(player[0], player[1], 2)){
         if (player_direction == PLAYER_DIRECTION_DOWN) {
             if (80 < player[1] && screen_offset[1] < (TILEMAP_HEIGHT - WINDOW_TILEMAP_HEIGHT) * 8 - (72 * 2)){
-                scroll_bkg(0, 1);
+                keep_sprites_static_while_moving(0, 1);
                 screen_offset[1] += 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 0, 1);
@@ -130,7 +50,7 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
         }
         if (player_direction == PLAYER_DIRECTION_UP) {
             if (0 < player[1] && 0 < screen_offset[1]){
-                scroll_bkg(0, -1);
+                keep_sprites_static_while_moving(0, -1);
                 screen_offset[1] -= 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 0, -1);
@@ -140,7 +60,7 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
 
         if (player_direction == PLAYER_DIRECTION_LEFT) {
             if (0 < player[0] && 0 < screen_offset[0]){
-                scroll_bkg(-1, 0);
+                keep_sprites_static_while_moving(-1, 0);
                 screen_offset[0] -= 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, -1, 0);
@@ -151,7 +71,7 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
         }
         if (player_direction == PLAYER_DIRECTION_RIGHT) {
             if (80 < player[0] && screen_offset[0] < TILEMAP_WIDTH * 8 - 160){
-                scroll_bkg(1, 0);
+                keep_sprites_static_while_moving(1, 0);
                 screen_offset[0] += 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 1, 0);
@@ -159,12 +79,13 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
             }
         }
 
-
     } else {
         player[0] = previous_coord[0];
         player[1] = previous_coord[1];
     }
 }
+
+
 
 void move_user(){
     UINT8 keys;
@@ -245,12 +166,20 @@ void init_user(){
     // On initialise les deux sprites qui représentent le joueur
     move_sprite(PLAYER_SPRITE_L_ID, player[0], player[1]);
     set_sprite_prop(PLAYER_SPRITE_L_ID, S_PALETTE);
-
     move_sprite(PLAYER_SPRITE_R_ID, player[0] + 8, player[1]);
     set_sprite_prop(PLAYER_SPRITE_R_ID, S_PALETTE);
 
     update_sprite_animation(PLAYER_SPRITE_L_ID, PLAYER_SPRITE_ANIM_L, PLAYER_DIRECTION_DOWN, 0);
     update_sprite_animation(PLAYER_SPRITE_R_ID, PLAYER_SPRITE_ANIM_R, PLAYER_DIRECTION_DOWN, 0);
+
+    //todo
+    move_sprite(2, player[0] + 16, player[1]);
+    set_sprite_prop(2, S_PALETTE);
+    move_sprite(3, player[0] + 8 + 16, player[1]);
+    set_sprite_prop(3, S_PALETTE);
+
+    update_sprite_animation(2,  PLAYER_SPRITE_ANIM_L, PLAYER_DIRECTION_DOWN, 0);
+    update_sprite_animation(3, PLAYER_SPRITE_ANIM_R, PLAYER_DIRECTION_DOWN, 0);
 }
 /**
  * Set tiles in memory
@@ -282,12 +211,13 @@ void init(){
     set_bkg_tiles(0, 0, TILEMAP_HEIGHT, TILEMAP_WIDTH, TILEMAP);
 
     //window
-    resetTileMap();
+//    resetTileMap();
     set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
     move_win(7, 128);
 
     screen_offset[0] = 0;
     screen_offset[1] = 0;
+
     init_user();
 }
 
