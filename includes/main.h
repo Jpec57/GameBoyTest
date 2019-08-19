@@ -85,9 +85,7 @@ int ft_strlen(char *str);
 char *ft_itoa(int num);
 void convert_text(char *text);
 
-//void keep_sprites_static_while_moving(int bkg_dir_x, int bkg_dir_y);
-
-//int write_on_screen(char *text);
+int write_on_screen(char *text);
 
 void wait_frames(INT8 count);
 #endif //FIRST_MAIN_H

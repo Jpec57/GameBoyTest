@@ -32,16 +32,16 @@ int check_if_ground_is_walkable(int pos_x, int pos_y, int sprite_size){
 void change_indic(){
     char text[] = "THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A JPEC 57\0";
 
-//    write_on_screen(text);
-    set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
-    move_win(7, 128);
+    write_on_screen(text);
+//    set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
+//    move_win(7, 128);
 }
 
 void check_if_is_colliding(UINT8 previous_coord[2]){
     if (check_if_ground_is_walkable(player[0], player[1], 2)){
         if (player_direction == PLAYER_DIRECTION_DOWN) {
             if (80 < player[1] && screen_offset[1] < (TILEMAP_HEIGHT - WINDOW_TILEMAP_HEIGHT) * 8 - (72 * 2)){
-                keep_sprites_static_while_moving(0, 1);
+                keep_sprites_static(0, 1);
                 screen_offset[1] += 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 0, 1);
@@ -50,7 +50,7 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
         }
         if (player_direction == PLAYER_DIRECTION_UP) {
             if (0 < player[1] && 0 < screen_offset[1]){
-                keep_sprites_static_while_moving(0, -1);
+                keep_sprites_static(0, -1);
                 screen_offset[1] -= 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 0, -1);
@@ -60,7 +60,7 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
 
         if (player_direction == PLAYER_DIRECTION_LEFT) {
             if (0 < player[0] && 0 < screen_offset[0]){
-                keep_sprites_static_while_moving(-1, 0);
+                keep_sprites_static(-1, 0);
                 screen_offset[0] -= 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, -1, 0);
@@ -71,7 +71,7 @@ void check_if_is_colliding(UINT8 previous_coord[2]){
         }
         if (player_direction == PLAYER_DIRECTION_RIGHT) {
             if (80 < player[0] && screen_offset[0] < TILEMAP_WIDTH * 8 - 160){
-                keep_sprites_static_while_moving(1, 0);
+                keep_sprites_static(1, 0);
                 screen_offset[0] += 1;
             } else {
                 scroll_sprite(PLAYER_SPRITE_L_ID, 1, 0);
@@ -211,8 +211,8 @@ void init(){
     set_bkg_tiles(0, 0, TILEMAP_HEIGHT, TILEMAP_WIDTH, TILEMAP);
 
     //window
-//    resetTileMap();
-    set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, WINDOW_TILEMAP);
+    reset_tile_map();
+    set_win_tiles(0, 0, WINDOW_TILEMAP_WIDTH, WINDOW_TILEMAP_HEIGHT, BLANK_WINDOW);
     move_win(7, 128);
 
     screen_offset[0] = 0;
